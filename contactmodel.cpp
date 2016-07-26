@@ -43,7 +43,7 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     case UnreadCountRole:
         return contactInfo->unreadCount;
     case LastMsgTimeRole:
-        return contactInfo->lastMsgTime;
+        return (quint64)contactInfo->lastMsgTime;
     case LastMsgContentRole:
         return contactInfo->lastMsgContent;
     default:
