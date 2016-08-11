@@ -4,18 +4,6 @@
 #include <QAbstractListModel>
 #include <QList>
 
-enum ContactRole {
-    NicknameRole = Qt::DisplayRole,
-    AvatarRole = Qt::DecorationRole,
-
-    IdRole = Qt::UserRole,
-    IsGroupRole,
-    UserSignRole,
-    UnreadCountRole,
-    LastMsgTimeRole,
-    LastMsgContentRole,
-};
-
 class ContactModel : public QAbstractListModel
 {
     Q_OBJECT

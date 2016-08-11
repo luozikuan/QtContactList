@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QSortFilterProxyModel>
 
 QT_FORWARD_DECLARE_CLASS(ContactModel)
 QT_FORWARD_DECLARE_CLASS(RecentContactModel)
@@ -18,11 +19,14 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::Widget *ui;
 
     ContactModel *contactModel;
-    RecentContactModel *recentContactModel;
+    QSortFilterProxyModel *recentContactModel;
 };
 
 #endif // WIDGET_H

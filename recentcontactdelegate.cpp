@@ -2,32 +2,31 @@
 #include <QMouseEvent>
 #include <QVariant>
 #include <QMenu>
-#include <QFontMetricsF>
-#include "contactdelegate.h"
-#include "contactmodel.h"
+#include <QDateTime>
+#include "recentcontactdelegate.h"
 #include "contactdata.h"
 
 static const QMarginsF itemMargins(0, 0, 0, 1);
 static const QSizeF avatarSize(50, 50);
 static const QSizeF itemSize(100, itemMargins.bottom() + itemMargins.top() + avatarSize.height());
 
-ContactDelegate::ContactDelegate(QObject *parent)
+RecentContactDelegate::RecentContactDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
 }
 
-void ContactDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void RecentContactDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     painter->setRenderHint(QPainter::Antialiasing);
 
     paintBackground(painter, option, index);
     paintAvatar(painter, option, index);
-    paintNickname(painter, option, index);
-    paintUserSign(painter, option, index);
+    paintNicknameAndMsgTime(painter, option, index);
+    paintMsgContent(painter, option, index);
     paintUnreadNum(painter, option, index);
 }
 
-void ContactDelegate::paintBackground(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void RecentContactDelegate::paintBackground(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(index);
 
@@ -37,15 +36,15 @@ void ContactDelegate::paintBackground(QPainter *painter, const QStyleOptionViewI
     } else if (option.state & QStyle::State_MouseOver) {
         bgColor = QColor(0xee, 0xee, 0xee);
     }
-    painter->setPen(QPen(QColor(0xdd, 0xdd, 0xdd), 1.0));
     painter->save();
+    painter->setPen(QPen(QColor(0xdd, 0xdd, 0xdd), 1.0));
     painter->setRenderHint(QPainter::Antialiasing, false);
     painter->drawLine(option.rect.bottomLeft(), option.rect.bottomRight());
     painter->restore();
     painter->fillRect(option.rect.adjusted(itemMargins.left(), itemMargins.top(), -itemMargins.right(), -itemMargins.bottom()), bgColor);
 }
 
-void ContactDelegate::paintAvatar(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void RecentContactDelegate::paintAvatar(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QRectF avatarRect = QRectF(option.rect.topLeft() + QPointF(itemMargins.left(), itemMargins.top()), avatarSize);
     QColor color = index.data(AvatarRole).value<QColor>();
@@ -55,28 +54,42 @@ void ContactDelegate::paintAvatar(QPainter *painter, const QStyleOptionViewItem 
     painter->fillPath(path, color);
 }
 
-void ContactDelegate::paintNickname(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QRectF nicknameRect = option.rect.adjusted(avatarSize.width() + itemMargins.left() + 6,
+    time_t time = index.data(LastMsgTimeRole).toULongLong();
+    QFontMetricsF metricF(painter->font());
+    QString timeStr = QDateTime::fromTime_t(time).toString("MM-dd H:mm");//QString::number(time);//
+    QSizeF timeTextSize = metricF.size(Qt::TextSingleLine, timeStr);
+
+    QRectF timeRect = option.rect.adjusted(option.rect.width() - itemMargins.right() - timeTextSize.width() - 5,
+                                           itemMargins.top(),
+                                           -itemMargins.right(),
+                                           -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
+    painter->setPen(QColor(0xaa, 0xaa, 0xaa));
+    painter->drawText(timeRect, Qt::AlignLeft | Qt::AlignVCenter, timeStr);
+//--------
+
+    QRectF nicknameRect = option.rect.adjusted(avatarSize.width() + 2 * itemMargins.left(),
                                                itemMargins.top(),
-                                               -itemMargins.right(),
+                                               -itemMargins.right() - timeTextSize.width() - 5,
                                                -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
     QString nickname = index.data(NicknameRole).toString();
+    nickname = metricF.elidedText(nickname, Qt::ElideRight, nicknameRect.width());
     painter->setPen(Qt::black);
     painter->drawText(nicknameRect, Qt::AlignLeft | Qt::AlignVCenter, nickname);
 }
 
-void ContactDelegate::paintUserSign(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void RecentContactDelegate::paintMsgContent(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QRectF signRect = option.rect.adjusted(avatarSize.width() + itemMargins.left() + 6,
+    QRectF signRect = option.rect.adjusted(avatarSize.width() + 2 * itemMargins.left(),
                                            itemMargins.top() + avatarSize.height() / 2 + 1,
                                            -itemMargins.right(),
                                            -itemMargins.bottom());
-    QString sign = index.data(UserSignRole).toString();
+    QString sign = index.data(LastMsgContentRole).toString();
     painter->drawText(signRect, Qt::AlignLeft | Qt::AlignVCenter, sign);
 }
 
-void ContactDelegate::paintUnreadNum(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void RecentContactDelegate::paintUnreadNum(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QRectF avatarRect = QRectF(option.rect.topLeft() + QPointF(itemMargins.left(), itemMargins.top()), avatarSize);
 
@@ -108,32 +121,27 @@ void ContactDelegate::paintUnreadNum(QPainter *painter, const QStyleOptionViewIt
     }
 }
 
-QSize ContactDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize RecentContactDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option)
     Q_UNUSED(index)
     return itemSize.toSize();
 }
 
-bool ContactDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+bool RecentContactDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = dynamic_cast<QMouseEvent*>(event);
         if (mouseEvent) {
             if (mouseEvent->buttons() & Qt::LeftButton) {
-                QRect avatarRect = QRect(option.rect.topLeft() + QPoint(itemMargins.left(), itemMargins.top()), avatarSize.toSize());
-                if (avatarRect.contains(mouseEvent->pos())) {
-                    qDebug() << "left clicked on avatar of item" << index.data();
-                    model->setData(index, index.data().toString() + tr("changed"), Qt::DisplayRole);
-                } else {
-                    qDebug() << "left clicked on item" << index.data();
-                    model->setData(index, 0, Qt::UserRole + 3);
+                if (option.rect.contains(mouseEvent->pos())) {
+                    model->setData(index, 0, UnreadCountRole);
                 }
             } else if (mouseEvent->buttons() & Qt::RightButton) {
                 qDebug() << "right clicked on item" << index.data();
                 QMenu menu;
-                menu.addAction(tr("delete this contact"));
-                menu.addAction(tr("delete all contact"));
+                menu.addAction(tr("delete this chat"));
+                menu.addAction(tr("delete all chat"));
                 menu.exec(QCursor::pos());
             }
         }

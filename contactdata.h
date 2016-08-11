@@ -2,7 +2,7 @@
 #define CONTACTDATA_H
 
 #include <QObject>
-#include <QHash>
+#include <QMap>
 #include <QColor>
 
 struct ContactInfo
@@ -18,6 +18,17 @@ struct ContactInfo
     time_t lastMsgTime;
     QString lastMsgContent;
 };
+enum ContactRole {
+    NicknameRole = Qt::DisplayRole,
+    AvatarRole = Qt::DecorationRole,
+
+    IdRole = Qt::UserRole,
+    IsGroupRole,
+    UserSignRole,
+    UnreadCountRole,
+    LastMsgTimeRole,
+    LastMsgContentRole,
+};
 
 class ContactData : public QObject
 {
@@ -25,7 +36,9 @@ class ContactData : public QObject
 public:
     static ContactData *instance();
     ~ContactData();
-    const QHash<int, ContactInfo*>& getAllContact();
+    const QMap<quint64, ContactInfo*>& getAllContact();
+    QList<quint64> &getFriendList();
+    ContactInfo *getPersonInfo(quint64 uid);
 
 signals:
 
@@ -34,7 +47,8 @@ public slots:
 private:
     explicit ContactData(QObject *parent = 0);
 
-    QHash<int, ContactInfo*> contactList;
+    QMap<quint64, ContactInfo*> contactList;
+    QList<quint64> friendList;
 };
 
 #endif // CONTACTDATA_H

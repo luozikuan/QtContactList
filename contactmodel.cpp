@@ -23,10 +23,11 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (index.row() >= ContactData::instance()->getAllContact().size() || index.row() < 0)
+    if (index.row() >= ContactData::instance()->getFriendList().size() || index.row() < 0)
         return QVariant();
 
-    ContactInfo *contactInfo = ContactData::instance()->getAllContact().value(index.row());
+    quint64 uid = ContactData::instance()->getFriendList().at(index.row());
+    ContactInfo *contactInfo = ContactData::instance()->getPersonInfo(uid);
     QVariant tmp;
     switch (role) {
     case NicknameRole:
@@ -58,10 +59,15 @@ bool ContactModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (!index.isValid())
         return false;
 
-    if (index.row() >= ContactData::instance()->getAllContact().size() || index.row() < 0)
+    if (index.row() >= ContactData::instance()->getFriendList().size() || index.row() < 0)
         return false;
 
-    ContactInfo *contactInfo = ContactData::instance()->getAllContact().value(index.row());
+    quint64 uid = ContactData::instance()->getFriendList().at(index.row());
+    ContactInfo *contactInfo = ContactData::instance()->getPersonInfo(uid);
+
+    QVector<int> changedRole;
+    changedRole.append(role);
+
     switch (role) {
     case NicknameRole:
         contactInfo->name = value.toString();
@@ -90,6 +96,8 @@ bool ContactModel::setData(const QModelIndex &index, const QVariant &value, int 
     default:
         return false;
     }
+
+    emit dataChanged(index, index, changedRole);
     return true;
 }
 
@@ -102,7 +110,7 @@ Qt::ItemFlags ContactModel::flags(const QModelIndex &index) const
 bool ContactModel::canFetchMore(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    if (count < ContactData::instance()->getAllContact().size()) {
+    if (count < ContactData::instance()->getFriendList().size()) {
         return true;
     }
     return false;
@@ -111,8 +119,8 @@ bool ContactModel::canFetchMore(const QModelIndex &parent) const
 void ContactModel::fetchMore(const QModelIndex &parent)
 {
     Q_UNUSED(parent)
-    int remainder = ContactData::instance()->getAllContact().size() - count;
-    int itemsToFetch = qMin(10, remainder);
+    int remainder = ContactData::instance()->getFriendList().size() - count;
+    int itemsToFetch = remainder;//qMin(10, remainder);
 
     beginInsertRows(QModelIndex(), count, count+itemsToFetch-1);
 

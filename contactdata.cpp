@@ -3,12 +3,11 @@
 #include <QDebug>
 #include "contactdata.h"
 
-const int total = 5;
+const int total = 99999;
 
 ContactData::ContactData(QObject *parent)
     : QObject(parent)
 {
-    contactList.reserve(total);
     for (int i = 0; i < total; i++) {
         ContactInfo *contactInfo = new ContactInfo;
         contactInfo->id = i;
@@ -22,6 +21,9 @@ ContactData::ContactData(QObject *parent)
         contactInfo->lastMsgContent = QString("Chated with someone");
 
         contactList.insert(i, contactInfo);
+        if (i % 2 == 0) {
+            friendList.append(i);
+        }
     }
     qDebug() << "created";
 }
@@ -38,7 +40,21 @@ ContactData::~ContactData()
     this->contactList.clear();
 }
 
-const QHash<int, ContactInfo *> &ContactData::getAllContact()
+const QMap<quint64, ContactInfo *> &ContactData::getAllContact()
 {
     return contactList;
+}
+
+QList<quint64> &ContactData::getFriendList()
+{
+    return friendList;
+}
+
+ContactInfo *ContactData::getPersonInfo(quint64 uid)
+{
+    auto it = contactList.find(uid);
+    if (it != contactList.end()) {
+        return it.value();
+    }
+    return Q_NULLPTR;
 }

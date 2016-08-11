@@ -15,14 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widget.cpp \
     contactdelegate.cpp \
-    recentcontactmodel.cpp \
     contactmodel.cpp \
-    contactdata.cpp
+    contactdata.cpp \
+    recentcontactdelegate.cpp
 
 HEADERS  += widget.h \
     contactdelegate.h \
-    recentcontactmodel.h \
     contactmodel.h \
-    contactdata.h
+    contactdata.h \
+    recentcontactdelegate.h
 
 FORMS    += widget.ui
