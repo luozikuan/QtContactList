@@ -14,7 +14,8 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget),
     contactModel(new ContactModel(this)),
     recentContactModel(new QSortFilterProxyModel(this)),
-    contactSearchModel(new QSortFilterProxyModel(this))
+    contactSearchModel(new QSortFilterProxyModel(this)),
+    searchTimer(new QTimer(this))
 {
     ui->setupUi(this);
 
@@ -33,7 +34,12 @@ Widget::Widget(QWidget *parent) :
     contactSearchModel->setFilterRole(NicknameRole);
     contactSearchModel->setFilterKeyColumn(0);
 
-    connect(ui->lineEdit, &QLineEdit::textChanged, contactSearchModel, &QSortFilterProxyModel::setFilterFixedString);
+    searchTimer->setInterval(300);
+    searchTimer->setSingleShot(true);
+    connect(searchTimer, &QTimer::timeout, [=](){
+        contactSearchModel->setFilterFixedString(ui->lineEdit->text());
+    });
+    connect(ui->lineEdit, &QLineEdit::textChanged, [=](){searchTimer->start();});
     connect(ui->listView_searchAll, &QListView::clicked, [=](const QModelIndex &index){
         qDebug() << index.row();
     });

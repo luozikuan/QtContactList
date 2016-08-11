@@ -32,12 +32,12 @@ void RecentContactDelegate::paintBackground(QPainter *painter, const QStyleOptio
 
     QColor bgColor(Qt::transparent);
     if (option.state & QStyle::State_Selected) {
-        bgColor = QColor(0xdd, 0xdd, 0xdd);
+        bgColor = QColor("#ddd");
     } else if (option.state & QStyle::State_MouseOver) {
-        bgColor = QColor(0xee, 0xee, 0xee);
+        bgColor = QColor("#eee");
     }
+    painter->setPen(QPen(QColor("#ddd"), 1.0));
     painter->save();
-    painter->setPen(QPen(QColor(0xdd, 0xdd, 0xdd), 1.0));
     painter->setRenderHint(QPainter::Antialiasing, false);
     painter->drawLine(option.rect.bottomLeft(), option.rect.bottomRight());
     painter->restore();
@@ -69,7 +69,7 @@ void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QSt
     painter->drawText(timeRect, Qt::AlignLeft | Qt::AlignVCenter, timeStr);
 //--------
 
-    QRectF nicknameRect = option.rect.adjusted(avatarSize.width() + 2 * itemMargins.left(),
+    QRectF nicknameRect = option.rect.adjusted(avatarSize.width() + itemMargins.left() + 6,
                                                itemMargins.top(),
                                                -itemMargins.right() - timeTextSize.width() - 5,
                                                -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
@@ -81,7 +81,7 @@ void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QSt
 
 void RecentContactDelegate::paintMsgContent(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QRectF signRect = option.rect.adjusted(avatarSize.width() + 2 * itemMargins.left(),
+    QRectF signRect = option.rect.adjusted(avatarSize.width() + itemMargins.left() + 6,
                                            itemMargins.top() + avatarSize.height() / 2 + 1,
                                            -itemMargins.right(),
                                            -itemMargins.bottom());

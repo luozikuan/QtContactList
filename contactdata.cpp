@@ -3,7 +3,7 @@
 #include <QDebug>
 #include "contactdata.h"
 
-const int total = 100000;
+const int total = 1000;
 
 ContactData::ContactData(QObject *parent)
     : QObject(parent)

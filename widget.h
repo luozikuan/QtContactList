@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSortFilterProxyModel>
+#include <QTimer>
 
 QT_FORWARD_DECLARE_CLASS(ContactModel)
 QT_FORWARD_DECLARE_CLASS(RecentContactModel)
@@ -28,6 +29,7 @@ private:
     ContactModel *contactModel;
     QSortFilterProxyModel *recentContactModel;
     QSortFilterProxyModel *contactSearchModel;
+    QTimer *searchTimer;
 };
 
 #endif // WIDGET_H
