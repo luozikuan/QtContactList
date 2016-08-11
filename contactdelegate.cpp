@@ -33,11 +33,11 @@ void ContactDelegate::paintBackground(QPainter *painter, const QStyleOptionViewI
 
     QColor bgColor(Qt::transparent);
     if (option.state & QStyle::State_Selected) {
-        bgColor = QColor(0xdd, 0xdd, 0xdd);
+        bgColor = QColor("#ddd");
     } else if (option.state & QStyle::State_MouseOver) {
-        bgColor = QColor(0xee, 0xee, 0xee);
+        bgColor = QColor("#eee");
     }
-    painter->setPen(QPen(QColor(0xdd, 0xdd, 0xdd), 1.0));
+    painter->setPen(QPen(QColor("#ddd"), 1.0));
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, false);
     painter->drawLine(option.rect.bottomLeft(), option.rect.bottomRight());
@@ -89,10 +89,10 @@ void ContactDelegate::paintUnreadNum(QPainter *painter, const QStyleOptionViewIt
             num = QString::number(unread);
         QFontMetricsF metricF(painter->font());
         QSizeF unreadTextSize = metricF.size(Qt::TextSingleLine, num);
-        qreal minHeight = 18.0;
+        unreadTextSize.setWidth(unreadTextSize.width() + 6);
+        qreal minHeight = 16.0;
         if (unreadTextSize.height() < minHeight) unreadTextSize.setHeight(minHeight);
-        if (unreadTextSize.width() < minHeight) unreadTextSize.setWidth(minHeight);
-        if (unreadTextSize.width() > unreadTextSize.height()) unreadTextSize.setWidth(unreadTextSize.width() + 6);
+        if (unreadTextSize.width() < unreadTextSize.height()) unreadTextSize.setWidth(unreadTextSize.height());
 
         QRectF unreadRect = avatarRect.adjusted(avatarRect.width() - unreadTextSize.width(), 0, 0, unreadTextSize.height() - avatarRect.height());
         QPainterPath shadowPath;

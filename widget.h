@@ -20,13 +20,14 @@ public:
     ~Widget();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_2_clicked();
 
 private:
     Ui::Widget *ui;
 
     ContactModel *contactModel;
     QSortFilterProxyModel *recentContactModel;
+    QSortFilterProxyModel *contactSearchModel;
 };
 
 #endif // WIDGET_H

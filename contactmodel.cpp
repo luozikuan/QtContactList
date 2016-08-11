@@ -120,7 +120,7 @@ void ContactModel::fetchMore(const QModelIndex &parent)
 {
     Q_UNUSED(parent)
     int remainder = ContactData::instance()->getFriendList().size() - count;
-    int itemsToFetch = remainder;//qMin(10, remainder);
+    int itemsToFetch = remainder; // qMin(10, remainder);
 
     beginInsertRows(QModelIndex(), count, count+itemsToFetch-1);
 

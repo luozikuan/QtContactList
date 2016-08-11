@@ -3,7 +3,7 @@
 #include <QDebug>
 #include "contactdata.h"
 
-const int total = 99999;
+const int total = 100000;
 
 ContactData::ContactData(QObject *parent)
     : QObject(parent)
@@ -16,14 +16,14 @@ ContactData::ContactData(QObject *parent)
         contactInfo->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
         contactInfo->userSign = QString("UserSign of %1").arg(i);
 
-        contactInfo->unreadCount = i;
+        contactInfo->unreadCount = 99+i;
         contactInfo->lastMsgTime = QDateTime::currentDateTime().toTime_t() - qrand() % (86400 * 7);
         contactInfo->lastMsgContent = QString("Chated with someone");
 
         contactList.insert(i, contactInfo);
-        if (i % 2 == 0) {
+        //if (i % 2 == 0) {
             friendList.append(i);
-        }
+        //}
     }
     qDebug() << "created";
 }

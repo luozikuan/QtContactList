@@ -1,5 +1,7 @@
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
+#include <QFontDialog>
+#include <QFont>
 #include "widget.h"
 #include "ui_widget.h"
 #include "contactdata.h"
@@ -11,23 +13,12 @@ Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget),
     contactModel(new ContactModel(this)),
-    recentContactModel(new QSortFilterProxyModel(this))
+    recentContactModel(new QSortFilterProxyModel(this)),
+    contactSearchModel(new QSortFilterProxyModel(this))
 {
     ui->setupUi(this);
 
-//    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
-//    shadow->setOffset(1, 1);
-//    shadow->setColor(QColor(0, 0, 0, 127));
-//    shadow->setBlurRadius(5);
-//    ui->listView_all->setGraphicsEffect(shadow);
-
-//    shadow = new QGraphicsDropShadowEffect;
-//    shadow->setOffset(1, 1);
-//    shadow->setColor(QColor(0, 0, 0, 127));
-//    shadow->setBlurRadius(5);
-//    ui->listView_recent->setGraphicsEffect(shadow);
-
-    ui->listView_all->setItemDelegate(new ContactDelegate(ui->listView_all));
+    ui->listView_all->setItemDelegate(new ContactDelegate(this));
     ui->listView_all->setModel(contactModel);
 
     //recentContactModel->setFilterRole(LastMsgTimeRole);
@@ -35,8 +26,20 @@ Widget::Widget(QWidget *parent) :
     recentContactModel->sort(0);
     recentContactModel->setSourceModel(contactModel);
 
-    ui->listView_recent->setItemDelegate(new RecentContactDelegate(ui->listView_recent));
+    ui->listView_recent->setItemDelegate(new RecentContactDelegate(this));
     ui->listView_recent->setModel(recentContactModel);
+
+    contactSearchModel->setSourceModel(contactModel);
+    contactSearchModel->setFilterRole(NicknameRole);
+    contactSearchModel->setFilterKeyColumn(0);
+
+    connect(ui->lineEdit, &QLineEdit::textChanged, contactSearchModel, &QSortFilterProxyModel::setFilterFixedString);
+    connect(ui->listView_searchAll, &QListView::clicked, [=](const QModelIndex &index){
+        qDebug() << index.row();
+    });
+
+    ui->listView_searchAll->setItemDelegate(new ContactDelegate(this));
+    ui->listView_searchAll->setModel(contactSearchModel);
 }
 
 Widget::~Widget()
@@ -44,10 +47,12 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::on_pushButton_clicked()
+void Widget::on_pushButton_2_clicked()
 {
-    quint64 uid = 2;
-    int row = ContactData::instance()->getFriendList().indexOf(uid);
-    QModelIndex index = ui->listView_all->model()->index(row, 0, QModelIndex());
-    ui->listView_all->model()->setData(index, 20, UnreadCountRole);
+    bool ok = false;
+    QFont font = QFontDialog::getFont(&ok);
+    if (ok) {
+        qDebug() << font;
+        qApp->setFont(font);
+    }
 }
