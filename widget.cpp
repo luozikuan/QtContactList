@@ -58,9 +58,9 @@ Widget::Widget(QWidget *parent) :
     on_pushButton_2_clicked();
 
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
-    shadow->setOffset(0, 1);
+    shadow->setOffset(0, 3);
     shadow->setColor(QColor(0, 0, 0, 127));
-    shadow->setBlurRadius(24);
+    shadow->setBlurRadius(8);
     ui->listView_searchAll->setGraphicsEffect(shadow);
 }
 
