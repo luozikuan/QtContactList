@@ -4,7 +4,7 @@
 #include <QMenu>
 #include <QDateTime>
 #include "recentcontactdelegate.h"
-#include "contactdata.h"
+#include "datacenter.h"
 
 static const QMarginsF itemMargins(0, 0, 0, 1);
 static const QSizeF avatarSize(50, 50);
@@ -102,10 +102,10 @@ void RecentContactDelegate::paintUnreadNum(QPainter *painter, const QStyleOption
             num = QString::number(unread);
         QFontMetricsF metricF(painter->font());
         QSizeF unreadTextSize = metricF.size(Qt::TextSingleLine, num);
-        qreal minHeight = 18.0;
+        unreadTextSize.setWidth(unreadTextSize.width() + 6);
+        qreal minHeight = 16.0;
         if (unreadTextSize.height() < minHeight) unreadTextSize.setHeight(minHeight);
-        if (unreadTextSize.width() < minHeight) unreadTextSize.setWidth(minHeight);
-        if (unreadTextSize.width() > unreadTextSize.height()) unreadTextSize.setWidth(unreadTextSize.width() + 6);
+        if (unreadTextSize.width() < unreadTextSize.height()) unreadTextSize.setWidth(unreadTextSize.height());
 
         QRectF unreadRect = avatarRect.adjusted(avatarRect.width() - unreadTextSize.width(), 0, 0, unreadTextSize.height() - avatarRect.height());
         QPainterPath shadowPath;

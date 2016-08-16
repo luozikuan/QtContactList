@@ -4,7 +4,7 @@
 #include <QFont>
 #include "widget.h"
 #include "ui_widget.h"
-#include "contactdata.h"
+#include "datacenter.h"
 #include "contactdelegate.h"
 #include "contactmodel.h"
 #include "recentcontactdelegate.h"
@@ -19,19 +19,22 @@ Widget::Widget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // set all contact
     ui->listView_all->setItemDelegate(new ContactDelegate(this));
     ui->listView_all->setModel(contactModel);
 
-    //recentContactModel->setFilterRole(LastMsgTimeRole);
-    recentContactModel->setSortRole(LastMsgTimeRole);
-    recentContactModel->sort(0);
-    recentContactModel->setSourceModel(contactModel);
+//    // set recent contact
+//    //recentContactModel->setFilterRole(LastMsgTimeRole);
+//    recentContactModel->setSortRole(LastMsgTimeRole);
+//    recentContactModel->sort(0);
+//    recentContactModel->setSourceModel(contactModel);
 
-    ui->listView_recent->setItemDelegate(new RecentContactDelegate(this));
-    ui->listView_recent->setModel(recentContactModel);
+//    ui->listView_recent->setItemDelegate(new RecentContactDelegate(this));
+//    ui->listView_recent->setModel(recentContactModel);
 
+    // set search contact
     contactSearchModel->setSourceModel(contactModel);
-    contactSearchModel->setFilterRole(NicknameRole);
+    contactSearchModel->setFilterRole(ContactModel::NicknameRole);
     contactSearchModel->setFilterKeyColumn(0);
 
     searchTimer->setInterval(300);
