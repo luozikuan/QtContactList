@@ -17,14 +17,14 @@ SOURCES += main.cpp\
     contactdelegate.cpp \
     contactmodel.cpp \
 #    recentcontactdelegate.cpp \
-    datacenter.cpp# \
+    datacenter.cpp # \
 #    recentcontactmodel.cpp
 
 HEADERS  += widget.h \
     contactdelegate.h \
     contactmodel.h \
 #    recentcontactdelegate.h \
-    datacenter.h# \
+    datacenter.h # \
 #    recentcontactmodel.h
 
 FORMS    += widget.ui

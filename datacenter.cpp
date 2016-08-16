@@ -4,8 +4,8 @@
 #include "datacenter.h"
 
 const int personTotal = 10000;
-const int frientTotal = 100;
-const int groupTotal = 200;
+const int frientTotal = 5;
+const int groupTotal = 2;
 
 DataCenter::DataCenter(QObject *parent)
     : QObject(parent)
@@ -13,7 +13,7 @@ DataCenter::DataCenter(QObject *parent)
     for (int i = 0; i < personTotal; i++) {
         PersonInfo *person = new PersonInfo;
         person->uid = i;
-        person->nickname = QString("nickname of %1").arg(i);
+        person->nickname = QString("%1's nickname").arg(i);
         person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
         person->sign = QString("UserSign of %1").arg(i);
         person->telephone = QString::number(i);
@@ -32,7 +32,7 @@ DataCenter::DataCenter(QObject *parent)
     for (int i = 0; i < groupTotal; i++) {
         GroupInfo *group = new GroupInfo;
         group->gid = personTotal + i;
-        group->groupName = QString("group name of %1").arg(group->gid);
+        group->groupName = QString("%1's group name(%2)").arg(i).arg(group->gid);
         group->memberList.append(i);
         group->memberList.append(i+1);
         group->memberList.append(i+2);
@@ -83,7 +83,6 @@ const QList<quint64> DataCenter::getGroupList()
 
 GroupInfo *DataCenter::getGroupInfo(quint64 gid)
 {
-    qDebug() << __FUNCTION__ << "finding " << gid;
     auto it = m_groupInfoMap.find(gid);
     if (it != m_groupInfoMap.end()) {
         return it.value();

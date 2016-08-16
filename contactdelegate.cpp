@@ -61,7 +61,7 @@ void ContactDelegate::paintNickname(QPainter *painter, const QStyleOptionViewIte
                                                -itemMargins.right(),
                                                -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
     QString nickname = index.data(ContactModel::NicknameRole).toString();
-    painter->setPen(Qt::black);
+    painter->setPen(QColor("#333333"));
     painter->drawText(nicknameRect, Qt::AlignLeft | Qt::AlignVCenter, nickname);
 }
 

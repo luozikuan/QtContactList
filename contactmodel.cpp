@@ -6,11 +6,11 @@ ContactModel::ContactModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     beginResetModel();
-    foreach (quint64 gid, DataCenter::instance()->getGroupList()) {
-        contactList.append({gid, false});
-    }
     foreach (quint64 uid, DataCenter::instance()->getFriendList()) {
         contactList.append({uid, false});
+    }
+    foreach (quint64 gid, DataCenter::instance()->getGroupList()) {
+        contactList.append({gid, true});
     }
     qDebug() << "contactList size" << contactList.size();
     endResetModel();
@@ -33,10 +33,6 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     QPair<quint64,bool> contact = contactList.at(index.row());
     if (contact.second) { // group
         GroupInfo *group = DataCenter::instance()->getGroupInfo(contact.first);
-        if (group == Q_NULLPTR) {
-            qDebug() << "group is null";
-            return QVariant();
-        }
         switch (role) {
         case NicknameRole:
             return group->groupName;
@@ -72,76 +68,18 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-//bool ContactModel::setData(const QModelIndex &index, const QVariant &value, int role)
-//{
-//    if (!index.isValid())
-//        return false;
+void ContactModel::onFriendInfoChanged(quint64 uid)
+{
+    int row = contactList.indexOf({uid, false});
+    QModelIndex index = this->createIndex(row, 0);
+    QVector<int> changedRole;
+    changedRole << ContactModel::NicknameRole
+                << ContactModel::AvatarRole
+                << ContactModel::UserSignRole;
+        emit dataChanged(index, index, changedRole);
+}
 
-//    if (index.row() >= contactList.size() || index.row() < 0)
-//        return false;
-
-//    quint64 uid = DataCenter::instance()->getFriendList().at(index.row());
-//    ContactInfo *contactInfo = DataCenter::instance()->getContactInfo(uid);
-
-//    QVector<int> changedRole;
-//    changedRole.append(role);
-
-//    switch (role) {
-//    case NicknameRole:
-//        contactInfo->name = value.toString();
-//        break;
-//    case AvatarRole:
-//        contactInfo->avatarColor = value.value<QColor>();
-//        break;
-//    case IdRole:
-//        contactInfo->id = value.toULongLong();
-//        break;
-//    case IsGroupRole:
-//        contactInfo->isGroup = value.toBool();
-//        break;
-//    case UserSignRole:
-//        contactInfo->userSign = value.toString();
-//        break;
-//    case UnreadCountRole:
-//        contactInfo->unreadCount = value.toInt();
-//        break;
-//    case LastMsgTimeRole:
-//        contactInfo->lastMsgTime = value.toULongLong();
-//        break;
-//    case LastMsgContentRole:
-//        contactInfo->lastMsgContent = value.toString();
-//        break;
-//    default:
-//        return false;
-//    }
-
-//    emit dataChanged(index, index, changedRole);
-//    return true;
-//}
-
-//Qt::ItemFlags ContactModel::flags(const QModelIndex &index) const
-//{
-//    return QAbstractListModel::flags(index) | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren | Qt::ItemIsEnabled;
-//}
-
-//bool ContactModel::canFetchMore(const QModelIndex &parent) const
-//{
-//    Q_UNUSED(parent)
-//    if (count < DataCenter::instance()->getFriendList().size()) {
-//        return true;
-//    }
-//    return false;
-//}
-
-//void ContactModel::fetchMore(const QModelIndex &parent)
-//{
-//    Q_UNUSED(parent)
-//    int remainder = DataCenter::instance()->getFriendList().size() - count;
-//    int itemsToFetch = remainder; // qMin(10, remainder);
-
-//    beginInsertRows(QModelIndex(), count, count+itemsToFetch-1);
-
-//    count += itemsToFetch;
-
-//    endInsertRows();
-//}
+void ContactModel::onGroupInfoChanged(quint64 gid)
+{
+    Q_UNUSED(gid)
+}

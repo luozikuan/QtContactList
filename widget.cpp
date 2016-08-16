@@ -20,8 +20,12 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
 
     // set all contact
+    QSortFilterProxyModel *allContactProxyModel = new QSortFilterProxyModel(this);
+    allContactProxyModel->setSortRole(ContactModel::NicknameRole);
+    allContactProxyModel->sort(0);
+    allContactProxyModel->setSourceModel(contactModel);
     ui->listView_all->setItemDelegate(new ContactDelegate(this));
-    ui->listView_all->setModel(contactModel);
+    ui->listView_all->setModel(allContactProxyModel);
 
 //    // set recent contact
 //    //recentContactModel->setFilterRole(LastMsgTimeRole);
@@ -41,6 +45,7 @@ Widget::Widget(QWidget *parent) :
     searchTimer->setSingleShot(true);
     connect(searchTimer, &QTimer::timeout, [=](){
         contactSearchModel->setFilterFixedString(ui->lineEdit->text());
+        on_pushButton_2_clicked();
     });
     connect(ui->lineEdit, &QLineEdit::textChanged, [=](){searchTimer->start();});
     connect(ui->listView_searchAll, &QListView::clicked, [=](const QModelIndex &index){
@@ -49,6 +54,14 @@ Widget::Widget(QWidget *parent) :
 
     ui->listView_searchAll->setItemDelegate(new ContactDelegate(this));
     ui->listView_searchAll->setModel(contactSearchModel);
+
+    on_pushButton_2_clicked();
+
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setOffset(0, 1);
+    shadow->setColor(QColor(0, 0, 0, 127));
+    shadow->setBlurRadius(24);
+    ui->listView_searchAll->setGraphicsEffect(shadow);
 }
 
 Widget::~Widget()
@@ -58,10 +71,27 @@ Widget::~Widget()
 
 void Widget::on_pushButton_2_clicked()
 {
-    bool ok = false;
-    QFont font = QFontDialog::getFont(&ok);
-    if (ok) {
-        qDebug() << font;
-        qApp->setFont(font);
+//    bool ok = false;
+//    QFont font = QFontDialog::getFont(&ok);
+//    if (ok) {
+//        qDebug() << font;
+//        qApp->setFont(font);
+//    }
+    int rowCount = ui->listView_searchAll->model()->rowCount();
+    int rowHeight = ui->listView_searchAll->sizeHintForRow(0);
+
+    qDebug() << rowCount << rowHeight;
+    int totalHeight = rowCount * rowHeight;
+    if (totalHeight > maximumHeight()) {
+        totalHeight = maximumHeight();
     }
+    ui->listView_searchAll->resize(ui->listView_searchAll->width(), totalHeight);
+}
+
+void Widget::on_pushButton_clicked()
+{
+    PersonInfo *person = DataCenter::instance()->getPersonInfo(0);
+    person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
+    person->nickname = QStringLiteral("testCourse2");
+    contactModel->onFriendInfoChanged(person->uid);
 }
