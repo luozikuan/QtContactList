@@ -25,10 +25,12 @@ private slots:
     void on_pushButton_clicked();
 
 private:
+    void adjustLayout();
+
     Ui::Widget *ui;
 
     ContactModel *contactModel;
-    QSortFilterProxyModel *recentContactModel;
+    RecentContactModel *recentContactModel;
     QSortFilterProxyModel *contactSearchModel;
     QTimer *searchTimer;
 };

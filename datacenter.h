@@ -55,7 +55,7 @@ public:
     const QList<quint64> getGroupList();
     GroupInfo *getGroupInfo(quint64 gid);
 
-    QList<QPair<quint64, bool>> &getRecentChatList();
+    const QMap<QPair<quint64, bool>, RecentContactInfo*> &getRecentChatMap();
     RecentContactInfo *getRecentChatInfo(QPair<quint64, bool> contact);
 
 signals:
@@ -71,7 +71,6 @@ private:
     QMap<quint64, GroupInfo*> m_groupInfoMap;
 
     QMap<QPair<quint64, bool>, RecentContactInfo*> m_recentChatMap;
-    QList<QPair<quint64, bool>> m_recentChatList;
 };
 
 #endif // DATACENTER_H

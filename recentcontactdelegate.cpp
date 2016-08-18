@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include "recentcontactdelegate.h"
 #include "datacenter.h"
+#include "recentcontactmodel.h"
 
 static const QMarginsF itemMargins(0, 0, 0, 1);
 static const QSizeF avatarSize(50, 50);
@@ -47,7 +48,7 @@ void RecentContactDelegate::paintBackground(QPainter *painter, const QStyleOptio
 void RecentContactDelegate::paintAvatar(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QRectF avatarRect = QRectF(option.rect.topLeft() + QPointF(itemMargins.left(), itemMargins.top()), avatarSize);
-    QColor color = index.data(AvatarRole).value<QColor>();
+    QColor color = index.data(RecentContactModel::AvatarRole).value<QColor>();
     //painter->fillRect(avatarRect, color);
     QPainterPath path;
     path.addEllipse(avatarRect - QMarginsF(5, 5, 5, 5));
@@ -56,7 +57,7 @@ void RecentContactDelegate::paintAvatar(QPainter *painter, const QStyleOptionVie
 
 void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    time_t time = index.data(LastMsgTimeRole).toULongLong();
+    time_t time = index.data(RecentContactModel::LastMsgTimeRole).toULongLong();
     QFontMetricsF metricF(painter->font());
     QString timeStr = QDateTime::fromTime_t(time).toString("MM-dd H:mm");//QString::number(time);//
     QSizeF timeTextSize = metricF.size(Qt::TextSingleLine, timeStr);
@@ -73,7 +74,7 @@ void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QSt
                                                itemMargins.top(),
                                                -itemMargins.right() - timeTextSize.width() - 5,
                                                -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
-    QString nickname = index.data(NicknameRole).toString();
+    QString nickname = index.data(RecentContactModel::NicknameRole).toString();
     nickname = metricF.elidedText(nickname, Qt::ElideRight, nicknameRect.width());
     painter->setPen(Qt::black);
     painter->drawText(nicknameRect, Qt::AlignLeft | Qt::AlignVCenter, nickname);
@@ -85,7 +86,7 @@ void RecentContactDelegate::paintMsgContent(QPainter *painter, const QStyleOptio
                                            itemMargins.top() + avatarSize.height() / 2 + 1,
                                            -itemMargins.right(),
                                            -itemMargins.bottom());
-    QString sign = index.data(LastMsgContentRole).toString();
+    QString sign = index.data(RecentContactModel::LastMsgContentRole).toString();
     painter->drawText(signRect, Qt::AlignLeft | Qt::AlignVCenter, sign);
 }
 
@@ -93,7 +94,7 @@ void RecentContactDelegate::paintUnreadNum(QPainter *painter, const QStyleOption
 {
     QRectF avatarRect = QRectF(option.rect.topLeft() + QPointF(itemMargins.left(), itemMargins.top()), avatarSize);
 
-    int unread = index.data(UnreadCountRole).toInt();
+    int unread = index.data(RecentContactModel::UnreadCountRole).toInt();
     if (unread != 0) {
         QString num;
         if (unread > 99)
@@ -135,7 +136,7 @@ bool RecentContactDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
         if (mouseEvent) {
             if (mouseEvent->buttons() & Qt::LeftButton) {
                 if (option.rect.contains(mouseEvent->pos())) {
-                    model->setData(index, 0, UnreadCountRole);
+                    model->setData(index, 0, RecentContactModel::UnreadCountRole);
                 }
             } else if (mouseEvent->buttons() & Qt::RightButton) {
                 qDebug() << "right clicked on item" << index.data();

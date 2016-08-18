@@ -3,9 +3,9 @@
 #include <QDebug>
 #include "datacenter.h"
 
-const int personTotal = 10000;
-const int frientTotal = 5;
-const int groupTotal = 2;
+const int personTotal = 100000;
+const int frientTotal = 400;
+const int groupTotal = 300;
 
 DataCenter::DataCenter(QObject *parent)
     : QObject(parent)
@@ -26,12 +26,22 @@ DataCenter::DataCenter(QObject *parent)
     }
 
     for (int i = 0; i < frientTotal; i++) {
-        m_friendList.append(2*i);
+        quint64 uid = 2 *i;
+        m_friendList.append(uid);
+
+        RecentContactInfo *chatInfo = new RecentContactInfo;
+        chatInfo->id = uid;
+        chatInfo->isGroup = false;
+        chatInfo->unreadCount = i;
+        chatInfo->lastMsgTime = QDateTime::currentDateTime().toTime_t() - qrand() % (86400 * 7);
+        chatInfo->lastMsgContent = QString("Chated with %1").arg(uid);
+        m_recentChatMap[qMakePair(uid, false)] = chatInfo;
     }
 
     for (int i = 0; i < groupTotal; i++) {
         GroupInfo *group = new GroupInfo;
-        group->gid = personTotal + i;
+        quint64 gid = personTotal + i;
+        group->gid = gid;
         group->groupName = QString("%1's group name(%2)").arg(i).arg(group->gid);
         group->memberList.append(i);
         group->memberList.append(i+1);
@@ -40,6 +50,14 @@ DataCenter::DataCenter(QObject *parent)
         group->memberList.append(i+5);
 
         m_groupInfoMap.insert(group->gid, group);
+
+        RecentContactInfo *chatInfo = new RecentContactInfo;
+        chatInfo->id = gid;
+        chatInfo->isGroup = true;
+        chatInfo->unreadCount = i;
+        chatInfo->lastMsgTime = QDateTime::currentDateTime().toTime_t() - qrand() % (86400 * 7);
+        chatInfo->lastMsgContent = QString("Chated in group %1").arg(gid);
+        m_recentChatMap[qMakePair(gid, true)] = chatInfo;
     }
     qDebug() << "created";
 }
@@ -90,9 +108,9 @@ GroupInfo *DataCenter::getGroupInfo(quint64 gid)
     return Q_NULLPTR;
 }
 
-QList<QPair<quint64, bool> > &DataCenter::getRecentChatList()
+const QMap<QPair<quint64, bool>, RecentContactInfo *> &DataCenter::getRecentChatMap()
 {
-    return m_recentChatList;
+    return m_recentChatMap;
 }
 
 RecentContactInfo *DataCenter::getRecentChatInfo(QPair<quint64, bool> contact)

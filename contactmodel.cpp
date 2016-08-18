@@ -76,10 +76,25 @@ void ContactModel::onFriendInfoChanged(quint64 uid)
     changedRole << ContactModel::NicknameRole
                 << ContactModel::AvatarRole
                 << ContactModel::UserSignRole;
-        emit dataChanged(index, index, changedRole);
+    emit dataChanged(index, index, changedRole);
 }
 
 void ContactModel::onGroupInfoChanged(quint64 gid)
 {
     Q_UNUSED(gid)
+}
+
+void ContactModel::onAddFriend(quint64 uid)
+{
+    beginInsertRows(QModelIndex(), this->rowCount(), this->rowCount());
+    contactList.append({uid, false});
+    endInsertRows();
+}
+
+void ContactModel::onRemoveFriend(quint64 uid)
+{
+    int row = contactList.indexOf({uid, false});
+    beginRemoveRows(QModelIndex(), row, row);
+    contactList.removeAt(row);
+    endRemoveRows();
 }

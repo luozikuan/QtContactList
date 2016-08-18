@@ -25,6 +25,9 @@ public slots:
     void onFriendInfoChanged(quint64 uid);
     void onGroupInfoChanged(quint64 gid);
 
+    void onAddFriend(quint64 uid);
+    void onRemoveFriend(quint64 uid);
+
 private:
     QList<QPair<quint64,bool>> contactList;
 };

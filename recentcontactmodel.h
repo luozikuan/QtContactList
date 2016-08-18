@@ -8,6 +8,14 @@ class RecentContactModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
+    enum RecentContactModelRole {
+        NicknameRole = Qt::DisplayRole,
+        AvatarRole = Qt::DecorationRole,
+
+        UnreadCountRole = Qt::UserRole,
+        LastMsgTimeRole,
+        LastMsgContentRole,
+    };
     explicit RecentContactModel(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -17,14 +25,17 @@ public:
 
 signals:
 
-protected:
-    bool canFetchMore(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    void fetchMore(const QModelIndex &parent) Q_DECL_OVERRIDE;
-
 public slots:
+    void removeChat(quint64 id, bool isGroup);
+    void updateLastMsg(quint64 id, bool isGroup, time_t time, QString msg);
+    void updateUnreadCount(quint64 id, bool isGroup, int unread);
+
+//protected:
+//    bool canFetchMore(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+//    void fetchMore(const QModelIndex &parent) Q_DECL_OVERRIDE;
 
 private:
-    int count;
+    QList<QPair<quint64,bool>> chatContactList;
 };
 
 #endif // RECENTCONTACTMODEL_H
