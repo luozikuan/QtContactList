@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QSortFilterProxyModel>
 #include <QTimer>
+#include <QCompleter>
 
 QT_FORWARD_DECLARE_CLASS(ContactModel)
 QT_FORWARD_DECLARE_CLASS(RecentContactModel)
@@ -21,7 +22,6 @@ public:
     ~Widget();
 
 private slots:
-    void on_pushButton_2_clicked();
     void on_pushButton_clicked();
 
 private:
@@ -31,6 +31,8 @@ private:
 
     ContactModel *contactModel;
     RecentContactModel *recentContactModel;
+    QCompleter *completer;
+
     QSortFilterProxyModel *contactSearchModel;
     QTimer *searchTimer;
 };
