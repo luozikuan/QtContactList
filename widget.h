@@ -21,8 +21,12 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
+signals:
+    void chatWith(quint64 id, bool isGroup);
+
 private slots:
     void on_pushButton_clicked();
+    void showSearchedInfo(const QModelIndex &index);
 
 private:
     void adjustLayout();

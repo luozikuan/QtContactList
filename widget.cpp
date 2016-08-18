@@ -45,6 +45,7 @@ Widget::Widget(QWidget *parent) :
     completer = new QCompleter(contactModel, this);
     completer->setCompletionRole(ContactModel::NicknameRole);
     completer->popup()->setItemDelegate(new ContactDelegate(this));
+    connect(completer, SIGNAL(activated(QModelIndex)), this, SLOT(showSearchedInfo(QModelIndex)), Qt::QueuedConnection);
 
     ui->lineEdit->setCompleter(completer);
 }
@@ -56,13 +57,19 @@ Widget::~Widget()
 
 void Widget::on_pushButton_clicked()
 {
-//    PersonInfo *person = DataCenter::instance()->getPersonInfo(0);
-//    person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
-//    person->nickname = QStringLiteral("testCourse2");
-//    contactModel->onFriendInfoChanged(person->uid);
+    PersonInfo *person = DataCenter::instance()->getPersonInfo(0);
+    person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
+    person->nickname = QStringLiteral("testCourse2");
+    contactModel->onFriendInfoChanged(person->uid);
 
     //contactModel->onRemoveFriend(6);
-    contactModel->onAddFriend(20);
+    //contactModel->onAddFriend(20);
+}
+
+void Widget::showSearchedInfo(const QModelIndex &index)
+{
+    qDebug() << index.data(ContactModel::NicknameRole);
+    ui->lineEdit->clear(); // FIXME:
 }
 
 void Widget::adjustLayout()
