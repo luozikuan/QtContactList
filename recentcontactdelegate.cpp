@@ -66,7 +66,7 @@ void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QSt
                                            itemMargins.top(),
                                            -itemMargins.right(),
                                            -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
-    painter->setPen(QColor(0xaa, 0xaa, 0xaa));
+    painter->setPen(QColor("#aaa"));
     painter->drawText(timeRect, Qt::AlignLeft | Qt::AlignVCenter, timeStr);
 //--------
 
@@ -76,7 +76,7 @@ void RecentContactDelegate::paintNicknameAndMsgTime(QPainter *painter, const QSt
                                                -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
     QString nickname = index.data(RecentContactModel::NicknameRole).toString();
     nickname = metricF.elidedText(nickname, Qt::ElideRight, nicknameRect.width());
-    painter->setPen(Qt::black);
+    painter->setPen(QColor("#333333"));
     painter->drawText(nicknameRect, Qt::AlignLeft | Qt::AlignVCenter, nickname);
 }
 
@@ -87,6 +87,9 @@ void RecentContactDelegate::paintMsgContent(QPainter *painter, const QStyleOptio
                                            -itemMargins.right(),
                                            -itemMargins.bottom());
     QString sign = index.data(RecentContactModel::LastMsgContentRole).toString();
+    QFontMetricsF metricF(painter->font());
+    sign = metricF.elidedText(sign, Qt::ElideRight, signRect.width());
+    painter->setPen(QColor("#999"));
     painter->drawText(signRect, Qt::AlignLeft | Qt::AlignVCenter, sign);
 }
 

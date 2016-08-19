@@ -48,10 +48,11 @@ void ContactDelegate::paintAvatar(QPainter *painter, const QStyleOptionViewItem 
 {
     QRectF avatarRect = QRectF(option.rect.topLeft() + QPointF(itemMargins.left(), itemMargins.top()), avatarSize);
     QColor color = index.data(ContactModel::AvatarRole).value<QColor>();
-    //painter->fillRect(avatarRect, color);
     QPainterPath path;
     path.addEllipse(avatarRect - QMarginsF(5, 5, 5, 5));
     painter->fillPath(path, color);
+//    painter->setPen(color);
+//    painter->drawEllipse(avatarRect - QMarginsF(5, 5, 5, 5));
 }
 
 void ContactDelegate::paintNickname(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -62,6 +63,8 @@ void ContactDelegate::paintNickname(QPainter *painter, const QStyleOptionViewIte
                                                -itemSize.height() + itemMargins.top() + avatarSize.height() / 2);
     QString nickname = index.data(ContactModel::NicknameRole).toString();
     painter->setPen(QColor("#333333"));
+    QFontMetricsF metricF(painter->font());
+    nickname = metricF.elidedText(nickname, Qt::ElideRight, nicknameRect.width());
     painter->drawText(nicknameRect, Qt::AlignLeft | Qt::AlignVCenter, nickname);
 }
 
@@ -72,6 +75,9 @@ void ContactDelegate::paintUserSign(QPainter *painter, const QStyleOptionViewIte
                                            -itemMargins.right(),
                                            -itemMargins.bottom());
     QString sign = index.data(ContactModel::UserSignRole).toString();
+    QFontMetricsF metricF(painter->font());
+    sign = metricF.elidedText(sign, Qt::ElideRight, signRect.width());
+    painter->setPen(QColor("#999"));
     painter->drawText(signRect, Qt::AlignLeft | Qt::AlignVCenter, sign);
 }
 
