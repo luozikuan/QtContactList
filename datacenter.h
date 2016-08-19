@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMap>
 #include <QColor>
+#include <QVector>
 
 struct PersonInfo
 {
@@ -43,6 +44,24 @@ struct RecentContactInfo
     QString lastMsgContent;
 };
 
+struct ClassNode
+{
+    quint64 classId;
+    QString className;
+    int role;
+    time_t startTime;
+    qint64 length;
+};
+
+struct CourseNode
+{
+    quint64 schoolId;
+    quint64 courseId;
+    QString courseName;
+    QString photoUrl;
+    QVector<ClassNode> classList;
+};
+
 class DataCenter : public QObject
 {
     Q_OBJECT
@@ -71,6 +90,8 @@ private:
     QMap<quint64, GroupInfo*> m_groupInfoMap;
 
     QMap<QPair<quint64, bool>, RecentContactInfo*> m_recentChatMap;
+
+    QMap<quint64, CourseNode*> courseList;
 };
 
 #endif // DATACENTER_H

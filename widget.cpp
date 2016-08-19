@@ -57,12 +57,12 @@ Widget::~Widget()
 
 void Widget::on_pushButton_clicked()
 {
-    PersonInfo *person = DataCenter::instance()->getPersonInfo(0);
-    person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
-    person->nickname = QStringLiteral("testCourse2");
-    contactModel->onFriendInfoChanged(person->uid);
+//    PersonInfo *person = DataCenter::instance()->getPersonInfo(0);
+//    person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
+//    person->nickname = QStringLiteral("testCourse2");
+//    contactModel->onFriendInfoChanged(person->uid);
 
-    //contactModel->onRemoveFriend(6);
+    contactModel->onRemoveFriend(6);
     //contactModel->onAddFriend(20);
 }
 

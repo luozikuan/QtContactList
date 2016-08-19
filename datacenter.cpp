@@ -4,8 +4,10 @@
 #include "datacenter.h"
 
 const int personTotal = 100000;
-const int frientTotal = 400;
-const int groupTotal = 300;
+const int frientTotal = 4000;
+const int groupTotal = 3000;
+const int courseTotal = 30;
+const int classTotal = 30;
 
 DataCenter::DataCenter(QObject *parent)
     : QObject(parent)
@@ -17,11 +19,6 @@ DataCenter::DataCenter(QObject *parent)
         person->avatarColor = Qt::GlobalColor(4+qrand()%17); // 2~18   2+(0~16)
         person->sign = QString("UserSign of %1").arg(i);
         person->telephone = QString::number(i);
-
-//        person->unreadCount = i;
-//        person->lastMsgTime = QDateTime::currentDateTime().toTime_t() - qrand() % (86400 * 7);
-//        person->lastMsgContent = QString("Chated with someone");
-
         m_personInfoMap.insert(i, person);
     }
 
@@ -59,6 +56,20 @@ DataCenter::DataCenter(QObject *parent)
         chatInfo->lastMsgContent = QString("Chated in group %1").arg(gid);
         m_recentChatMap[qMakePair(gid, true)] = chatInfo;
     }
+
+//    for (int i = 0; i < courseTotal; i++) {
+//        CourseNode *course = new CourseNode;
+//        course->schoolId = i;
+//        course->courseId = i * 10 + i;
+//        course->courseName = QString("course %1-%2").arg(course->schoolId).arg(course->courseId);
+//        course->photoUrl = "http://www.w3school.com.cn/i/eg_cute.gif";
+
+//        for (int j = 0; j < classTotal; j++) {
+//            ClassNode *classNode = new ClassNode;
+//            classNode->classId = i;
+//            //classNode->
+//        }
+//    }
     qDebug() << "created";
 }
 
