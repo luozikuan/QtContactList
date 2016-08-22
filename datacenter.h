@@ -14,18 +14,6 @@ struct PersonInfo
     QString sign;
     QString telephone;
 };
-//enum ContactRole {
-//    NicknameRole = Qt::DisplayRole,
-//    AvatarRole = Qt::DecorationRole,
-
-//    IdRole = Qt::UserRole,
-//    IsGroupRole,
-//    UserSignRole,
-
-//    UnreadCountRole,
-//    LastMsgTimeRole,
-//    LastMsgContentRole,
-//};
 
 struct GroupInfo
 {
@@ -59,7 +47,7 @@ struct CourseNode
     quint64 courseId;
     QString courseName;
     QString photoUrl;
-    QVector<ClassNode> classList;
+    QVector<ClassNode*> classList;
 };
 
 class DataCenter : public QObject
@@ -68,6 +56,7 @@ class DataCenter : public QObject
 public:
     static DataCenter *instance();
     ~DataCenter();
+
     QList<quint64> &getFriendList();
     PersonInfo *getPersonInfo(quint64 uid);
 
@@ -77,6 +66,8 @@ public:
     const QMap<QPair<quint64, bool>, RecentContactInfo*> &getRecentChatMap();
     RecentContactInfo *getRecentChatInfo(QPair<quint64, bool> contact);
 
+    const QMap<quint64, QMap<quint64, CourseNode*>> getCourseList();
+    CourseNode *getCourseNode(quint64 schoolId, quint64 courseId);
 signals:
 
 public slots:
@@ -91,7 +82,7 @@ private:
 
     QMap<QPair<quint64, bool>, RecentContactInfo*> m_recentChatMap;
 
-    QMap<quint64, CourseNode*> courseList;
+    QMap<quint64, QMap<quint64, CourseNode*>> courseList;
 };
 
 #endif // DATACENTER_H

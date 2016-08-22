@@ -18,13 +18,15 @@ SOURCES += main.cpp\
     contactmodel.cpp \
     recentcontactdelegate.cpp \
     datacenter.cpp \
-    recentcontactmodel.cpp
+    recentcontactmodel.cpp \
+    coursemodel.cpp
 
 HEADERS  += widget.h \
     contactdelegate.h \
     contactmodel.h \
     recentcontactdelegate.h \
     datacenter.h \
-    recentcontactmodel.h
+    recentcontactmodel.h \
+    coursemodel.h
 
 FORMS    += widget.ui

@@ -57,19 +57,25 @@ DataCenter::DataCenter(QObject *parent)
         m_recentChatMap[qMakePair(gid, true)] = chatInfo;
     }
 
-//    for (int i = 0; i < courseTotal; i++) {
-//        CourseNode *course = new CourseNode;
-//        course->schoolId = i;
-//        course->courseId = i * 10 + i;
-//        course->courseName = QString("course %1-%2").arg(course->schoolId).arg(course->courseId);
-//        course->photoUrl = "http://www.w3school.com.cn/i/eg_cute.gif";
+    for (int i = 0; i < courseTotal; i++) {
+        CourseNode *course = new CourseNode;
+        course->schoolId = i;
+        course->courseId = i * 10 + i;
+        course->courseName = QString("course %1-%2").arg(course->schoolId).arg(course->courseId);
+        course->photoUrl = "http://www.w3school.com.cn/i/eg_cute.gif";
 
-//        for (int j = 0; j < classTotal; j++) {
-//            ClassNode *classNode = new ClassNode;
-//            classNode->classId = i;
-//            //classNode->
-//        }
-//    }
+        for (int j = 0; j < classTotal; j++) {
+            ClassNode *classNode = new ClassNode;
+            classNode->classId = i;
+            classNode->className = QString("class %1").arg(classNode->classId);
+            classNode->role = 3;
+            classNode->startTime = QDateTime::currentDateTime().toTime_t() - qrand() % (86400 * 7);
+            classNode->length = 1800 + qrand() % 3600;
+
+            course->classList.append(classNode);
+        }
+        courseList[course->schoolId][course->courseId] = course;
+    }
     qDebug() << "created";
 }
 
@@ -129,6 +135,23 @@ RecentContactInfo *DataCenter::getRecentChatInfo(QPair<quint64, bool> contact)
     auto it = m_recentChatMap.find(contact);
     if (it != m_recentChatMap.end()) {
         return it.value();
+    }
+    return Q_NULLPTR;
+}
+
+const QMap<quint64, QMap<quint64, CourseNode *> > DataCenter::getCourseList()
+{
+    return courseList;
+}
+
+CourseNode *DataCenter::getCourseNode(quint64 schoolId, quint64 courseId)
+{
+    auto schoolIter = courseList.find(schoolId);
+    if (schoolIter != courseList.end()) {
+        auto courseIter = schoolIter.value().find(courseId);
+        if (courseIter != schoolIter.value().end()) {
+            return courseIter.value();
+        }
     }
     return Q_NULLPTR;
 }
