@@ -6,7 +6,10 @@ RecentContactModel::RecentContactModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     beginResetModel();
-    chatContactList = DataCenter::instance()->getRecentChatMap().keys();
+    foreach (auto chatItem, DataCenter::instance()->getRecentChatMap().keys()) {
+        chatContactList.append({chatItem.first, chatItem.second ? GroupItem : FriendItem});
+    }
+    chatContactList.append({0, FriendRequest});
     qDebug() << "chatContactList size" << chatContactList.size();
     endResetModel();
 }
@@ -25,9 +28,32 @@ QVariant RecentContactModel::data(const QModelIndex &index, int role) const
     if (index.row() >= chatContactList.size() || index.row() < 0)
         return QVariant();
 
-    QPair<quint64, bool> contact = chatContactList.at(index.row());
+    QPair<quint64, int> contact = chatContactList.at(index.row());
+    if (contact.first == 0 && contact.second == FriendRequest) {
+        //
+        switch (role) {
+        case NicknameRole:
+            return tr("Friend Request");
+        case AvatarRole:
+        {
+            QVariant tmp;
+            tmp.setValue(Qt::darkRed);
+            return tmp;
+        }
+        case UnreadCountRole:
+            return 0; // TODO:
+        case LastMsgTimeRole:
+            return 0; // TODO:
+        case LastMsgContentRole:
+            return QString("");
+        default:
+            break;
+        }
+        return QVariant();
+    }
+
     RecentContactInfo *contactInfo = DataCenter::instance()->getRecentChatInfo(contact);
-    if (contact.second) { // group
+    if (contact.second == GroupItem) { // group
         GroupInfo *group = DataCenter::instance()->getGroupInfo(contact.first);
         switch (role) {
         case NicknameRole:
@@ -41,7 +67,7 @@ QVariant RecentContactModel::data(const QModelIndex &index, int role) const
         default:
             break;
         }
-    } else { // person
+    } else if (contact.second == FriendItem) { // person
         PersonInfo *person = DataCenter::instance()->getPersonInfo(contact.first);
         switch (role) {
         case NicknameRole:
@@ -79,7 +105,23 @@ bool RecentContactModel::setData(const QModelIndex &index, const QVariant &value
     if (index.row() >= chatContactList.size() || index.row() < 0)
         return false;
 
-    QPair<quint64, bool> contact = chatContactList.at(index.row());
+    QPair<quint64, int> contact = chatContactList.at(index.row());
+    if (contact.first == 0 && contact.second == FriendRequest) {
+        //
+        switch (role) {
+        case UnreadCountRole:
+            // TODO: do sth
+            break;
+        case LastMsgTimeRole:
+            // TODO: do sth
+            break;
+        default:
+            return false;
+        }
+        emit dataChanged(index, index);
+        return true;
+    }
+
     RecentContactInfo *contactInfo = DataCenter::instance()->getRecentChatInfo(contact);
     QVector<int> changedRole;
     changedRole.append(role);
@@ -109,7 +151,7 @@ Qt::ItemFlags RecentContactModel::flags(const QModelIndex &index) const
 
 void RecentContactModel::removeChat(quint64 id, bool isGroup)
 {
-    int row = chatContactList.indexOf({id, isGroup});
+    int row = chatContactList.indexOf({id, isGroup ? GroupItem : FriendItem});
     beginRemoveRows(QModelIndex(), row, row);
     chatContactList.removeAt(row);
     endRemoveRows();
@@ -117,7 +159,7 @@ void RecentContactModel::removeChat(quint64 id, bool isGroup)
 
 void RecentContactModel::updateLastMsg(quint64 id, bool isGroup, time_t time, QString msg)
 {
-    int row = chatContactList.indexOf({id, isGroup});
+    int row = chatContactList.indexOf({id, isGroup ? GroupItem : FriendItem});
     QModelIndex index = this->createIndex(row, 0);
 
     setData(index, (quint64)time, RecentContactModel::LastMsgTimeRole);
@@ -126,7 +168,7 @@ void RecentContactModel::updateLastMsg(quint64 id, bool isGroup, time_t time, QS
 
 void RecentContactModel::updateUnreadCount(quint64 id, bool isGroup, int unread)
 {
-    int row = chatContactList.indexOf({id, isGroup});
+    int row = chatContactList.indexOf({id, isGroup ? GroupItem : FriendItem});
     QModelIndex index = this->createIndex(row, 0);
 
     setData(index, unread, RecentContactModel::UnreadCountRole);

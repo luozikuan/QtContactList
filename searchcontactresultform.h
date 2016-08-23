@@ -17,7 +17,7 @@ class SearchContactResultForm : public QWidget
     Q_OBJECT
     enum {
         LocalResultPage = 0,
-        NotFoundPage,
+        LabelHintPage,
         NetworkResultPage,
     };
 public:
@@ -29,6 +29,7 @@ public:
 
 private:
     void doSearch();
+    void adjustHeight();
 
     Ui::SearchContactResultForm *ui;
     ContactFilterProxyModel *contactSearchModel;
@@ -36,6 +37,8 @@ private:
     QTimer *searchTimer;
 
     QString searchKey;
+
+    const int maxVisibleItems = 7;
 };
 
 #endif // SEARCHCONTACTRESULTFORM_H

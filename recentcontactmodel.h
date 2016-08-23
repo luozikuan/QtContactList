@@ -35,7 +35,8 @@ public slots:
 //    void fetchMore(const QModelIndex &parent) Q_DECL_OVERRIDE;
 
 private:
-    QList<QPair<quint64,bool>> chatContactList;
+    enum ListItemType{FriendItem, GroupItem, FriendRequest};
+    QList<QPair<quint64,int>> chatContactList;
 };
 
 #endif // RECENTCONTACTMODEL_H

@@ -23,7 +23,6 @@ Widget::Widget(QWidget *parent) :
     searchResult(new SearchContactResultForm(this))
 {
     ui->setupUi(this);
-    //searchResult->setWindowFlags(Qt::Popup);
     searchResult->hide();
     searchResult->setLocalSourceModel(contactModel);
     searchResult->raise();
@@ -86,9 +85,9 @@ void Widget::initContactModel()
 
 void Widget::searchContact(QString key)
 {
-    searchResult->setSearchString(key);
-    searchResult->resize(ui->lineEdit->width(), 200);
+    searchResult->resize(ui->lineEdit->width(), searchResult->height());
     QPoint globalTopLeft = ui->lineEdit->geometry().bottomLeft();
     searchResult->move(globalTopLeft + QPoint(0, 5));
+    searchResult->setSearchString(key);
     //searchResult->show();
 }
