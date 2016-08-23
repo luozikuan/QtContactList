@@ -28,6 +28,7 @@ signals:
 private slots:
     void on_pushButton_clicked();
     void showSearchedInfo(const QModelIndex &index);
+    void searchContact(QString key);
 
 private:
     void initRecentChatModel();

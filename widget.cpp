@@ -2,6 +2,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QFontDialog>
 #include <QFont>
+#include <QGraphicsDropShadowEffect>
 
 #include "widget.h"
 #include "ui_widget.h"
@@ -22,10 +23,20 @@ Widget::Widget(QWidget *parent) :
     searchResult(new SearchContactResultForm(this))
 {
     ui->setupUi(this);
-    searchResult->setWindowFlags(Qt::Popup);
+    //searchResult->setWindowFlags(Qt::Popup);
+    searchResult->hide();
+    searchResult->setLocalSourceModel(contactModel);
+    searchResult->raise();
+
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    shadow->setOffset(0, 2);
+    shadow->setBlurRadius(16);
+    searchResult->setGraphicsEffect(shadow);
 
     initRecentChatModel();
     initContactModel();
+
+    connect(ui->lineEdit, &QLineEdit::textChanged, this, &Widget::searchContact);
 }
 
 Widget::~Widget()
@@ -42,12 +53,7 @@ void Widget::on_pushButton_clicked()
 
     //contactModel->onRemoveFriend(6);
     //contactModel->onAddFriend(20);
-
-
-    searchResult->resize(ui->lineEdit->width(), 200);
-    QPoint globalTopLeft = this->mapToGlobal(ui->lineEdit->geometry().bottomLeft());
-    searchResult->move(globalTopLeft + QPoint(0, 5));
-    searchResult->show();
+    searchResult->hide();
 }
 
 void Widget::showSearchedInfo(const QModelIndex &index)
@@ -76,4 +82,13 @@ void Widget::initContactModel()
     allContactProxyModel->setSourceModel(contactModel);
     ui->listView_all->setItemDelegate(new ContactDelegate(this));
     ui->listView_all->setModel(allContactProxyModel);
+}
+
+void Widget::searchContact(QString key)
+{
+    searchResult->setSearchString(key);
+    searchResult->resize(ui->lineEdit->width(), 200);
+    QPoint globalTopLeft = ui->lineEdit->geometry().bottomLeft();
+    searchResult->move(globalTopLeft + QPoint(0, 5));
+    //searchResult->show();
 }
