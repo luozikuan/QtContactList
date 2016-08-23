@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <QSortFilterProxyModel>
-#include <QTimer>
 #include <QCompleter>
 
 QT_FORWARD_DECLARE_CLASS(ContactModel)
 QT_FORWARD_DECLARE_CLASS(RecentContactModel)
+QT_FORWARD_DECLARE_CLASS(ContactFilterProxyModel)
+QT_FORWARD_DECLARE_CLASS(SearchContactResultForm)
 
 namespace Ui {
 class Widget;
@@ -29,16 +30,15 @@ private slots:
     void showSearchedInfo(const QModelIndex &index);
 
 private:
-    void adjustLayout();
+    void initRecentChatModel();
+    void initContactModel();
 
     Ui::Widget *ui;
 
     ContactModel *contactModel;
     RecentContactModel *recentContactModel;
-    QCompleter *completer;
-
-    QSortFilterProxyModel *contactSearchModel;
-    QTimer *searchTimer;
+    ContactFilterProxyModel *contactSearchModel;
+    SearchContactResultForm *searchResult;
 };
 
 #endif // WIDGET_H

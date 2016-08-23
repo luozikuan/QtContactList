@@ -19,7 +19,10 @@ SOURCES += main.cpp\
     recentcontactdelegate.cpp \
     datacenter.cpp \
     recentcontactmodel.cpp \
-    coursemodel.cpp
+    coursemodel.cpp \
+    contactfilterproxymodel.cpp \
+    searchcontactresultform.cpp \
+    networksearchresultmodel.cpp
 
 HEADERS  += widget.h \
     contactdelegate.h \
@@ -27,6 +30,10 @@ HEADERS  += widget.h \
     recentcontactdelegate.h \
     datacenter.h \
     recentcontactmodel.h \
-    coursemodel.h
+    coursemodel.h \
+    contactfilterproxymodel.h \
+    searchcontactresultform.h \
+    networksearchresultmodel.h
 
-FORMS    += widget.ui
+FORMS    += widget.ui \
+    searchcontactresultform.ui
