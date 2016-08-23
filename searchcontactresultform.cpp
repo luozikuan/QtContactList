@@ -22,6 +22,7 @@ SearchContactResultForm::SearchContactResultForm(QWidget *parent) :
     ui->listView_local->setModel(contactSearchModel);
     ui->listView_local->setItemDelegate(new ContactDelegate(this));
     ui->listView_network->setModel(networkResultModel);
+    ui->listView_network->setItemDelegate(new ContactDelegate(this));
 }
 
 SearchContactResultForm::~SearchContactResultForm()
@@ -44,6 +45,20 @@ void SearchContactResultForm::setLocalSourceModel(QAbstractItemModel *model)
     contactSearchModel->setSourceModel(model);
 }
 
+void SearchContactResultForm::responseSearchResult()
+{
+    QList<quint64> uidList;
+    uidList << 1234;
+    networkResultModel->setResultList(uidList);
+    if (networkResultModel->rowCount() != 0) {
+        ui->stackedWidget->setCurrentIndex(NetworkResultPage);
+    } else {
+        ui->label_hint->setText(tr("Searching..."));
+        ui->stackedWidget->setCurrentIndex(LabelHintPage);
+    }
+    adjustHeight();
+}
+
 void SearchContactResultForm::doSearch()
 {
     this->show();
@@ -61,12 +76,7 @@ void SearchContactResultForm::doSearch()
             ui->label_hint->setText(tr("Searching..."));
             ui->stackedWidget->setCurrentIndex(LabelHintPage);
 
-//            if (networkResultModel->rowCount() != 0) {
-//                ui->stackedWidget->setCurrentIndex(NetworkResultPage);
-//            } else {
-//                ui->label_hint->setText(tr("Searching..."));
-//                ui->stackedWidget->setCurrentIndex(LabelHintPage);
-//            }
+            QTimer::singleShot(0, this, SLOT(responseSearchResult()));
         } else {
             ui->label_hint->setText(tr("Not found!"));
             ui->stackedWidget->setCurrentIndex(LabelHintPage);

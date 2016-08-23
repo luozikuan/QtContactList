@@ -27,6 +27,9 @@ public:
     void setSearchString(const QString &filter);
     void setLocalSourceModel(QAbstractItemModel *model);
 
+public slots:
+    void responseSearchResult();
+
 private:
     void doSearch();
     void adjustHeight();
