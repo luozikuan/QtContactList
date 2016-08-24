@@ -12,7 +12,10 @@ public:
         CourseNameRole = Qt::DisplayRole,
         CoursePictureRole = Qt::DecorationRole,
 
-
+        ClassNameRole = Qt::UserRole,
+        ClassStartTimeRole,
+        ClassLengthRole,
+        ClassIdentityRole,
     };
 
     explicit CourseModel(QObject *parent = 0);

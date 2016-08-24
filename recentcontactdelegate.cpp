@@ -132,24 +132,24 @@ QSize RecentContactDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     return itemSize.toSize();
 }
 
-bool RecentContactDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
-{
-    if (event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent *mouseEvent = dynamic_cast<QMouseEvent*>(event);
-        if (mouseEvent) {
-            if (mouseEvent->buttons() & Qt::LeftButton) {
-                if (option.rect.contains(mouseEvent->pos())) {
-                    model->setData(index, 0, RecentContactModel::UnreadCountRole);
-                }
-            } else if (mouseEvent->buttons() & Qt::RightButton) {
-                qDebug() << "right clicked on item" << index.data();
-                QMenu menu;
-                menu.addAction(tr("delete this chat"));
-                menu.addAction(tr("delete all chat"));
-                menu.exec(QCursor::pos());
-            }
-        }
-    }
-    event->ignore();
-    return false;
-}
+//bool RecentContactDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+//{
+//    if (event->type() == QEvent::MouseButtonPress) {
+//        QMouseEvent *mouseEvent = dynamic_cast<QMouseEvent*>(event);
+//        if (mouseEvent) {
+//            if (mouseEvent->buttons() & Qt::LeftButton) {
+//                if (option.rect.contains(mouseEvent->pos())) {
+//                    model->setData(index, 0, RecentContactModel::UnreadCountRole);
+//                }
+//            } else if (mouseEvent->buttons() & Qt::RightButton) {
+//                qDebug() << "right clicked on item" << index.data();
+//                QMenu menu;
+//                menu.addAction(tr("delete this chat"));
+//                menu.addAction(tr("delete all chat"));
+//                menu.exec(QCursor::pos());
+//            }
+//        }
+//    }
+//    event->ignore();
+//    return false;
+//}

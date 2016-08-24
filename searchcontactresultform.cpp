@@ -75,8 +75,9 @@ void SearchContactResultForm::doSearch()
             //    request from server and show it in network result page.
             ui->label_hint->setText(tr("Searching..."));
             ui->stackedWidget->setCurrentIndex(LabelHintPage);
+            networkResultModel->clearResultList();
 
-            QTimer::singleShot(0, this, SLOT(responseSearchResult()));
+            QTimer::singleShot(1000, this, SLOT(responseSearchResult()));
         } else {
             ui->label_hint->setText(tr("Not found!"));
             ui->stackedWidget->setCurrentIndex(LabelHintPage);
@@ -102,16 +103,13 @@ void SearchContactResultForm::adjustHeight()
         listHeight = 50;
     } else if (currentPage == NetworkResultPage) {
         listHeight = this->height() - ui->listView_network->height();
-        qDebug() << this->height() << "-" << ui->listView_network->height();
 
         int showItem = qMin(networkResultModel->rowCount(), maxVisibleItems);
         QModelIndex idx = networkResultModel->index(0, 0);
         if (idx.isValid()) {
             listHeight += showItem * ui->listView_network->visualRect(idx).height();
             listHeight += (showItem - 1) * ui->listView_network->spacing();
-            qDebug() << "valid";
         }
-        qDebug() << "list height =" << listHeight << ui->listView_network->height();
     } else {
         // error
     }
