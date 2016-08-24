@@ -13,29 +13,31 @@
 #include "recentcontactdelegate.h"
 #include "contactfilterproxymodel.h"
 #include "searchcontactresultform.h"
+#include "coursemodel.h"
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget),
-    contactModel(new ContactModel(this)),
-    recentContactModel(new RecentContactModel(this)),
-    contactSearchModel(new ContactFilterProxyModel(this)),
-    searchResult(new SearchContactResultForm(this))
+//    contactModel(new ContactModel(this)),
+//    recentContactModel(new RecentContactModel(this)),
+//    contactSearchModel(new ContactFilterProxyModel(this)),
+    searchResult(new SearchContactResultForm(this)),
+    courseModel(new CourseModel(this))
 {
     ui->setupUi(this);
     searchResult->hide();
-    searchResult->setLocalSourceModel(contactModel);
-    searchResult->raise();
+//    searchResult->setLocalSourceModel(contactModel);
+//    searchResult->raise();
 
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-    shadow->setOffset(0, 2);
-    shadow->setBlurRadius(16);
-    searchResult->setGraphicsEffect(shadow);
+//    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+//    shadow->setOffset(0, 2);
+//    shadow->setBlurRadius(16);
+//    searchResult->setGraphicsEffect(shadow);
 
-    initRecentChatModel();
-    initContactModel();
+//    initRecentChatModel();
+//    initContactModel();
 
-    connect(ui->lineEdit, &QLineEdit::textChanged, this, &Widget::searchContact);
+//    connect(ui->lineEdit, &QLineEdit::textChanged, this, &Widget::searchContact);
 }
 
 Widget::~Widget()

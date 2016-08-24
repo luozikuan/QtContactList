@@ -9,6 +9,7 @@ QT_FORWARD_DECLARE_CLASS(ContactModel)
 QT_FORWARD_DECLARE_CLASS(RecentContactModel)
 QT_FORWARD_DECLARE_CLASS(ContactFilterProxyModel)
 QT_FORWARD_DECLARE_CLASS(SearchContactResultForm)
+QT_FORWARD_DECLARE_CLASS(CourseModel)
 
 namespace Ui {
 class Widget;
@@ -40,6 +41,7 @@ private:
     RecentContactModel *recentContactModel;
     ContactFilterProxyModel *contactSearchModel;
     SearchContactResultForm *searchResult;
+    CourseModel *courseModel;
 };
 
 #endif // WIDGET_H
