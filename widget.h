@@ -34,6 +34,7 @@ private slots:
 private:
     void initRecentChatModel();
     void initContactModel();
+    void initCourseModel();
 
     Ui::Widget *ui;
 

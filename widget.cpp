@@ -18,26 +18,28 @@
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget),
-//    contactModel(new ContactModel(this)),
-//    recentContactModel(new RecentContactModel(this)),
-//    contactSearchModel(new ContactFilterProxyModel(this)),
+    contactModel(new ContactModel(this)),
+    recentContactModel(new RecentContactModel(this)),
+    contactSearchModel(new ContactFilterProxyModel(this)),
     searchResult(new SearchContactResultForm(this)),
     courseModel(new CourseModel(this))
 {
     ui->setupUi(this);
     searchResult->hide();
-//    searchResult->setLocalSourceModel(contactModel);
-//    searchResult->raise();
+    searchResult->setLocalSourceModel(contactModel);
+    searchResult->raise();
 
-//    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-//    shadow->setOffset(0, 2);
-//    shadow->setBlurRadius(16);
-//    searchResult->setGraphicsEffect(shadow);
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    shadow->setOffset(0, 2);
+    shadow->setBlurRadius(16);
+    searchResult->setGraphicsEffect(shadow);
 
-//    initRecentChatModel();
-//    initContactModel();
+    initRecentChatModel();
+    initContactModel();
 
-//    connect(ui->lineEdit, &QLineEdit::textChanged, this, &Widget::searchContact);
+    connect(ui->lineEdit, &QLineEdit::textChanged, this, &Widget::searchContact);
+
+    initCourseModel();
 }
 
 Widget::~Widget()
@@ -83,6 +85,11 @@ void Widget::initContactModel()
     allContactProxyModel->setSourceModel(contactModel);
     ui->listView_all->setItemDelegate(new ContactDelegate(this));
     ui->listView_all->setModel(allContactProxyModel);
+}
+
+void Widget::initCourseModel()
+{
+    ui->listView_course->setModel(courseModel);
 }
 
 void Widget::searchContact(QString key)

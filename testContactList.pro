@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     coursemodel.cpp \
     contactfilterproxymodel.cpp \
     searchcontactresultform.cpp \
-    networksearchresultmodel.cpp
+    networksearchresultmodel.cpp \
+    coursedelegate.cpp
 
 HEADERS  += widget.h \
     contactdelegate.h \
@@ -33,7 +34,8 @@ HEADERS  += widget.h \
     coursemodel.h \
     contactfilterproxymodel.h \
     searchcontactresultform.h \
-    networksearchresultmodel.h
+    networksearchresultmodel.h \
+    coursedelegate.h
 
 FORMS    += widget.ui \
     searchcontactresultform.ui

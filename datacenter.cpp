@@ -6,8 +6,8 @@
 const int personTotal = 100000;
 const int frientTotal = 4000;
 const int groupTotal = 3000;
-const int courseTotal = 1600;
-const int classTotal = 100;
+const int courseTotal = 2;
+const int classTotal = 2;
 
 DataCenter::DataCenter(QObject *parent)
     : QObject(parent)

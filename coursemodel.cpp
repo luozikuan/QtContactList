@@ -48,5 +48,9 @@ QModelIndex CourseModel::index(int row, int column, const QModelIndex &parent) c
 
 QModelIndex CourseModel::parent(const QModelIndex &index) const
 {
+    if (!index.isValid())
+        return QModelIndex();
+
+    if ()
     return QModelIndex();
 }

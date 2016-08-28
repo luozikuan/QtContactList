@@ -32,6 +32,9 @@ struct RecentContactInfo
     QString lastMsgContent;
 };
 
+QT_FORWARD_DECLARE_STRUCT(CourseNode)
+QT_FORWARD_DECLARE_STRUCT(ClassNode)
+
 struct ClassNode
 {
     quint64 classId;
@@ -39,7 +42,10 @@ struct ClassNode
     int role;
     time_t startTime;
     qint64 length;
+
+    CourseNode *parent;
 };
+Q_DECLARE_METATYPE(ClassNode)
 
 struct CourseNode
 {

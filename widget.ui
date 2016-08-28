@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
-    <height>618</height>
+    <width>874</width>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QListView {
+   <string notr="true">QListView, QTreeView {
 	background-color: #fafafa;
 	border: none;
 	font-family: &quot;ff-tisa-web-pro-1&quot;, &quot;ff-tisa-web-pro-2&quot;, &quot;Lucida Grande&quot;, &quot;Hiragino Sans GB&quot;, &quot;Hiragino Sans GB W3&quot;, &quot;Microsoft YaHei&quot;;
@@ -44,7 +44,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="2" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pushButton">
@@ -74,6 +74,13 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="0" column="2" rowspan="2">
+    <widget class="QListView" name="listView_course">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
